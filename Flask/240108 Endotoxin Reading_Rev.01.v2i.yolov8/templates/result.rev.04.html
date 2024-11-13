@@ -1,0 +1,55 @@
+<!-- 이미지가 화면상에 보여짐 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Detection Results</title>
+   <!-- 부트스트랩 CSS 추가 -->
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+       .image-container {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           margin-bottom: 20px;
+       }
+       .image-container div {
+           width: 23%;
+           margin: 1%;
+           text-align: center;
+       }
+       .image-container img {
+           width: 100%;
+           height: auto;
+       }
+       .btn-container {
+           text-align: center;
+           margin-bottom: 20px;
+       }
+   </style>
+</head>
+<body>
+   <div class="container">
+       <h1 class="text-center mb-4">Detection Results</h1>
+       <div class="btn-container">
+           <a href="{{ url_for('download_all', unique_id=unique_id) }}" class="btn btn-success">결과 일괄 다운로드</a>
+           <a href="{{ url_for('generate_report') }}" class="btn btn-info">보고서 보기</a>
+           <a href="{{ url_for('index') }}" class="btn btn-primary">홈으로</a>
+       </div>
+       <div class="image-container">
+           {% for result in results %}
+               {% if result.error %}
+                   <div>
+                       <p>{{ result.original_image }}: {{ result.error }}</p>
+                   </div>
+               {% else %}
+                   <div>
+                       <img src="{{ result.result_image }}" alt="Result Image">
+                       <p>{{ result.original_image }}</p>
+                   </div>
+               {% endif %}
+           {% endfor %}
+       </div>
+   </div>
+</body>
+</html>
