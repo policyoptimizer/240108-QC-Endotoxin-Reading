@@ -1,4 +1,4 @@
-# 최종본
+# 이걸로 LG MBB Day 발표함
 
 from flask import Flask, render_template, request, redirect, url_for, send_file, session, flash
 from ultralytics import YOLO
@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use('Agg')  # Matplotlib 백엔드를 'Agg'로 설정
 import matplotlib.pyplot as plt
 from collections import Counter
+from PIL import Image  # Pillow 라이브러리 import
 
 app = Flask(__name__)
 
@@ -165,29 +166,39 @@ def download_report(unique_id):
     # 그래프 이미지 경로
     graph_image_path = os.path.join(app.config['RESULT_FOLDER'], unique_id, 'graph.png')
 
+    # 이미지의 실제 크기 가져오기
+    image = Image.open(graph_image_path)
+    image_width_px, image_height_px = image.size
+
     # PDF 생성
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
     # 보고서 제목
-    pdf.cell(200, 10, txt="Endotoxin Detection Report", ln=True, align='C')
+    pdf.cell(0, 10, txt="Endotoxin Detection Report", ln=True, align='C')
 
     # 배치번호 추가
-    pdf.cell(200, 10, txt=f"Batch Number: {report_data['batch_number']}", ln=True, align='L')
+    pdf.cell(0, 10, txt=f"Batch Number: {report_data['batch_number']}", ln=True, align='L')
 
     # 테스트 일자 및 총 이미지 수
-    pdf.cell(200, 10, txt=f"Test Date: {report_data['test_date']}", ln=True, align='L')
-    pdf.cell(200, 10, txt=f"Total Images: {report_data['total_images']}", ln=True, align='L')
+    pdf.cell(0, 10, txt=f"Test Date: {report_data['test_date']}", ln=True, align='L')
+    pdf.cell(0, 10, txt=f"Total Images: {report_data['total_images']}", ln=True, align='L')
     pdf.ln(10)
 
+    # PDF에서 이미지의 너비와 높이 계산
+    pdf_w = pdf.w - 20  # 좌우 마진 10씩 빼기
+    pdf_h = (pdf_w * image_height_px) / image_width_px  # 이미지 비율에 따라 높이 계산
+
     # 그래프 이미지 추가
-    pdf.image(graph_image_path, x=10, y=pdf.get_y(), w=pdf.w - 20)
-    pdf.ln(10)
+    pdf.image(graph_image_path, x=10, y=pdf.get_y(), w=pdf_w)
+
+    # Y 좌표를 이미지 아래로 이동
+    pdf.set_y(pdf.get_y() + pdf_h + 10)
 
     # 각 이미지별 결과
     for idx, img_result in enumerate(report_data['image_results'], 1):
-        pdf.cell(200, 10, txt=f"{idx}. {img_result['image_name']} - Detected Objects: {img_result['num_objects']}", ln=True, align='L')
+        pdf.cell(0, 10, txt=f"{idx}. {img_result['image_name']} - Detected Objects: {img_result['num_objects']}", ln=True, align='L')
 
     # PDF를 메모리에 저장
     pdf_output = pdf.output(dest='S').encode('latin1')
