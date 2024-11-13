@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Detection Report</title>
+   <!-- 부트스트랩 CSS 추가 -->
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+       .container {
+           margin-top: 30px;
+       }
+       .graph-container {
+           text-align: center;
+           margin-bottom: 30px;
+       }
+       .graph-container img {
+           max-width: 80%; /* 그래프 크기를 조정하여 겹치지 않게 */
+           height: auto;
+       }
+       .btn-container {
+           text-align: center;
+           margin-bottom: 20px;
+       }
+   </style>
+</head>
+<body>
+   <div class="container">
+       <h1 class="text-center mb-4">Endotoxin Detection Report</h1>
+       <p><strong>Batch Number:</strong> {{ report_data.batch_number }}</p>
+       <p><strong>Test Date:</strong> {{ report_data.test_date }}</p>
+       <p><strong>Total Images:</strong> {{ report_data.total_images }}</p>
+
+       <div class="graph-container">
+           <h3>Distribution of Detected Objects per Image</h3>
+           <img src="{{ url_for('static', filename='results/' + unique_id + '/graph.png') }}" alt="Graph">
+       </div>
+
+       <h3>Image Results</h3>
+       <ul>
+           {% for img_result in report_data.image_results %}
+               <li>{{ loop.index }}. {{ img_result.image_name }} - Detected Objects: {{ img_result.num_objects }}</li>
+           {% endfor %}
+       </ul>
+
+       <div class="btn-container">
+           <a href="{{ url_for('download_report', unique_id=unique_id) }}" class="btn btn-info">PDF 다운로드</a>
+           <a href="{{ url_for('index') }}" class="btn btn-primary">홈으로</a>
+       </div>
+   </div>
+</body>
+</html>
