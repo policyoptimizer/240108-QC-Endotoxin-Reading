@@ -1,0 +1,78 @@
+<!-- result.html 대신 report.html 적용해야 함 -->
+
+<!DOCTYPE html>
+<html>
+<head>
+   <title>익산 QC팀의 Wisdom 한 Endotoxin Detection</title>
+   <!-- 부트스트랩 CSS 추가 -->
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+       body {
+            /* background-image: url('{{ url_for('static', filename='images/background.jpg') }}'); */
+            background-color: #f8f9fa; /* 배경색을 밝은 색으로 설정 */
+            color: #212529;
+            /* text-shadow: 1px 1px 2px #000; */
+       }
+       .container {
+           margin-top: 100px;
+           background-color: rgba(0, 0, 0, 0.6);
+           padding: 30px;
+           border-radius: 10px;
+       }
+       .btn-custom {
+           background-color: #28a745;
+           color: #fff;
+           font-size: 1.5em;
+           padding: 10px 30px;
+           border-radius: 50px;
+       }
+       .btn-custom:hover {
+           background-color: #218838;
+       }
+       .form-group label {
+           font-weight: bold;
+           font-size: 1.2em;
+       }
+       .form-control {
+           font-size: 1.2em;
+       }
+       .image-row {
+           display: flex;
+           justify-content: center;
+           margin-top: 20px;
+       }
+       .image-row img {
+           width: 30%;
+           margin: 0 10px;
+           border-radius: 10px;
+       }
+   </style>
+</head>
+<body>
+   <div class="container text-center">
+       <h1 class="mb-4">🚀 Endotoxin Detection 더욱 Wisdom 👩 하게!! 🚀</h1>
+       <p>이 애플리케이션은 이미지에서 Endotoxin을 자동으로 탐지하여 업무 효율을 높여줍니다.</p>
+
+       {% with messages = get_flashed_messages() %}
+         {% if messages %}
+           <div class="alert alert-warning" role="alert">
+             {{ messages[0] }}
+           </div>
+         {% endif %}
+       {% endwith %}
+
+       <form action="/detect" method="post" class="mb-3">
+           <div class="form-group">
+               <label for="batch_number">배치번호를 입력하세요:</label>
+               <input type="text" name="batch_number" id="batch_number" class="form-control" required placeholder="예: YYY25001">
+           </div>
+           <input type="submit" value="이미지 처리 시작" class="btn btn-custom">
+       </form>
+       <div class="image-row">
+           <img src="{{ url_for('static', filename='images/PQ1-3.PNG') }}" alt="Image 1">
+           <img src="{{ url_for('static', filename='images/PQ1-2.PNG') }}" alt="Image 2">
+           <img src="{{ url_for('static', filename='images/PQ2-4.PNG') }}" alt="Image 3">
+       </div>
+   </div>
+</body>
+</html>
