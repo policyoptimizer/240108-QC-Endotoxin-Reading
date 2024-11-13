@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Detection Results</title>
+   <!-- 부트스트랩 CSS 추가 -->
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+       .image-container {
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: center;
+           margin-bottom: 20px;
+       }
+       .image-container img {
+           width: 30%;
+           margin: 10px;
+       }
+   </style>
+</head>
+<body>
+   <div class="container text-center">
+       <h1 class="mb-4">Detection Results</h1>
+       <p><a href="{{ url_for('download_all', unique_id=unique_id) }}" class="btn btn-success">결과 일괄 다운로드</a></p>
+       <div class="image-container">
+           {% for result in results %}
+               {% if result.error %}
+                   <p>{{ result.original_image }}: {{ result.error }}</p>
+               {% else %}
+                   <div>
+                       <img src="{{ result.result_image }}" alt="Result Image">
+                       <p>{{ result.original_image }}</p>
+                   </div>
+               {% endif %}
+           {% endfor %}
+       </div>
+   </div>
+</body>
+</html>
